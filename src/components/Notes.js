@@ -96,9 +96,9 @@ export const Notes = (props) => {
                             No notes to display!
                         </div>
                     </div>}
-                    {notes.map((note) => {
-                        return <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
-                    })}
+                    {notes.map((note) => 
+                         <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
+                    )}
                 </div>
             </div>
         </>
