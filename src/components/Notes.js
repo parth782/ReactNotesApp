@@ -6,22 +6,22 @@ import { AddNote } from './AddNote'
 import { Noteitem } from './Noteitem'
 
 export const Notes = (props) => {
-    let history=useHistory();
-    const {showalert}=props;
+    let history = useHistory();
+    const { showalert } = props;
     const context = useContext(noteContext)
     // eslint-disable-next-line
     const { notes, getallNotes, editNote } = context
     useEffect(() => {
-        if(localStorage.getItem('token')==null){
+        if (localStorage.getItem('token') == null) {
             history.push('/login')
         }
         getallNotes();
     }, [])
     const ref = useRef(null);
-    const [notep, setnote] = useState({ etitle: "", edescription: "", etag: "", eid: "" })
+    const [notep, setnote] = useState({ etitle: "", edescription: "", etag: "", eid: "", ecolor: "" })
     const updatenote = (currentnote) => {
         console.log("update is clicked");
-        setnote({ etag: currentnote.tag, etitle: currentnote.title, edescription: currentnote.description, eid: currentnote._id });
+        setnote({ etag: currentnote.tag, etitle: currentnote.title, edescription: currentnote.description, eid: currentnote._id, ecolor: currentnote.color });
         ref.current.click();
 
 
@@ -34,8 +34,8 @@ export const Notes = (props) => {
     const handleclick = (e) => {
         e.preventDefault();
         ref.current.click();
-        editNote(notep.eid, notep.etitle, notep.edescription, notep.etag);
-        props.showalert("Note Updated Successfully","success")
+        editNote(notep.eid, notep.etitle, notep.edescription, notep.etag, notep.ecolor);
+        props.showalert("Note Updated Successfully", "success")
 
 
     }
@@ -66,12 +66,18 @@ export const Notes = (props) => {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="edescription" className="form-label">Note Description</label>
-                                    <textarea className="form-control" id="edescription" rows="3" name="edescription" onChange={onchange} value={notep.edescription}minLength={5}></textarea>
+                                    <textarea className="form-control" id="edescription" rows="3" name="edescription" onChange={onchange} value={notep.edescription} minLength={5}></textarea>
                                 </div>
 
                                 <div className="mb-3">
                                     <label htmlFor="etag" className="form-label">Note Tag</label>
                                     <input type="text" name="etag" className="form-control" id="etag" aria-describedby="emailHelp" onChange={onchange} value={notep.etag} minLength={3} />
+
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="ecolor" className="form-label">Note Color</label>
+                                    <input type="text" name="ecolor" className="form-control" id="ecolor" onChange={onchange} value={notep.ecolor} minLength={3} aria-describedby="statusColor" />
+                                    <div id="statusColor" className="form-text">This color will differentiate,uregent,pending done notes.</div>
 
                                 </div>
 
@@ -83,7 +89,7 @@ export const Notes = (props) => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button disabled={notep.etitle.length<5||notep.edescription.length<5||notep.etag.length<3} type="button" className="btn btn-primary" onClick={handleclick}>Update Note</button>
+                            <button disabled={notep.etitle.length < 5 || notep.edescription.length < 5 || notep.etag.length < 3} type="button" className="btn btn-primary" onClick={handleclick}>Update Note</button>
                         </div>
                     </div>
                 </div>
@@ -96,8 +102,8 @@ export const Notes = (props) => {
                             No notes to display!
                         </div>
                     </div>}
-                    {notes.map((note) => 
-                         <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
+                    {notes.length !== 0 && notes.map((note) =>
+                        <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
                     )}
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import noteContext from '../context/notes/noteContext';
+import { Notes } from './Notes';
 
 export const Noteitem = (props) => {
     const { note,updatenote } = props;
@@ -13,7 +14,7 @@ export const Noteitem = (props) => {
     return (
         
 
-            <div className="card mx-5 my-3" style={{ "width": "18rem" }}>
+            <div className="card mx-5 my-3" style={{ "width": "18rem","backgroundColor":note.color.toLowerCase(),"color":note.color.toLowerCase()!="white"?"white":"black" }}>
 
                 <div className="card-body">
                     <div className="d-flex align-items-center">
@@ -24,7 +25,7 @@ export const Noteitem = (props) => {
                         </div>
                             <p className="card-text">{note.description}</p>
                             <br/><br/>
-                            <footer className="blockquote-footer">Tag: <cite title="Source Title">{note.tag}</cite></footer>
+                            <footer>Tag: <cite title="Source Title">{note.tag}</cite></footer>
 
                         </div>
                     </div>

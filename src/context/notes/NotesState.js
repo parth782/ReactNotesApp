@@ -37,7 +37,7 @@ const NoteState = (props) => {
           setnotes(json);
           }
         //Add A note
-        const addNote=async (title,description,tag)=>{
+        const addNote=async (title,description,tag,color)=>{
           const response = await fetch(`${host}api/notes/addnote`, {
             method: 'POST', 
             
@@ -47,7 +47,7 @@ const NoteState = (props) => {
               
             },
             
-            body: JSON.stringify({title,description,tag}) 
+            body: JSON.stringify({title,description,tag,color}) 
           });
          
              const json=await response.json()
@@ -70,7 +70,7 @@ const NoteState = (props) => {
               getallNotes();
         }
         //editNote by id
-        const editNote=async (id,title,description,tag)=>{
+        const editNote=async (id,title,description,tag,color)=>{
           //API CALL
           const response = await fetch(`${host}api/notes/updatenote/${id}`, {
             method: 'PUT', 
@@ -81,7 +81,7 @@ const NoteState = (props) => {
               
             },
             
-            body: JSON.stringify({title,description,tag}) 
+            body: JSON.stringify({title,description,tag,color}) 
           });
          
           const json= await response.json()

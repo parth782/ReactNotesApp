@@ -9,8 +9,8 @@ export const AddNote = (props) => {
     const [notep,setnote]=useState({title:"",description:"",tag:""})
     const handleclick=(e)=>{
           e.preventDefault();
-          addNote(notep.title,notep.description,notep.tag);
-          setnote({title:"",description:"",tag:""});
+          addNote(notep.title,notep.description,notep.tag,notep.color);
+          setnote({title:"",description:"",tag:"",color:""});
           props.showalert("Note Added Successfully","success")
           
          
@@ -25,7 +25,7 @@ export const AddNote = (props) => {
         <form>
             <div className="mb-3">
                 <label htmlFor="title"  className="form-label">Note Title</label>
-                <input type="text" name="title" className="form-control" id="title" aria-describedby="emailHelp" onChange={onchange} minLength={5} value={notep.title} />
+                <input type="text" name="title" className="form-control" id="title"  onChange={onchange} minLength={5} value={notep.title} />
 
             </div>
             <div className="mb-3">
@@ -33,9 +33,14 @@ export const AddNote = (props) => {
                 <textarea className="form-control" id="description" rows="3" name="description" onChange={onchange} minLength={5} value={notep.description}></textarea>
             </div>
             <div className="mb-3">
-                <label htmlFor="title"  className="form-label">Note Tag</label>
-                <input type="text" name="tag" className="form-control" id="tag" aria-describedby="emailHelp" onChange={onchange} minLength={5} value={notep.tag} />
+                <label htmlFor="tag"  className="form-label">Note Tag</label>
+                <input type="text" name="tag" className="form-control" id="tag"  onChange={onchange} minLength={5} value={notep.tag} />
 
+            </div>
+            <div className="mb-3">
+                <label htmlFor="color"  className="form-label">Color</label>
+                <input type="text" name="color" className="form-control" id="color"  onChange={onchange} minLength={3} value={notep.color} aria-describedby="statusColor" />
+                <div id="statusColor" className="form-text">This color will differentiate,uregent,pending done notes.</div>
             </div>
             
 
