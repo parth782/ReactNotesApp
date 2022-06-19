@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
+import { Route, Redirect } from 'react-router-dom';
 
 import noteContext from '../context/notes/noteContext'
 import { AddNote } from './AddNote'
@@ -8,13 +9,15 @@ import { Noteitem } from './Noteitem'
 export const Notes = (props) => {
     let history = useHistory();
     const { showalert } = props;
-    const context = useContext(noteContext)
     // eslint-disable-next-line
+    if (localStorage.getItem('token') == null) {
+        history.push('/login')
+    }
+
+    const context = useContext(noteContext)
     const { notes, getallNotes, editNote } = context
     useEffect(() => {
-        if (localStorage.getItem('token') == null) {
-            history.push('/login')
-        }
+
         getallNotes();
     }, [])
     const ref = useRef(null);
@@ -42,72 +45,84 @@ export const Notes = (props) => {
 
 
     return (
-        <>
-            <AddNote showalert={showalert} />
+        <Route render={props => {
+            if (localStorage.getItem('token') == null) {
+                // not logged in so redirect to login page with the return url
+                return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            }
 
-            <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal" ref={ref} aria-hidden="true">
-                Update Note Modal
-            </button>
+            return (
+                <>
+
+                    <AddNote showalert={showalert} />
+
+                    <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal" ref={ref} aria-hidden="true">
+                        Update Note Modal
+                    </button>
 
 
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Edit Note</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <form>
-                                <div className="mb-3">
-                                    <label htmlFor="etitle" className="form-label">Note Title</label>
-                                    <input type="text" name="etitle" className="form-control" id="etitle" aria-describedby="emailHelp" onChange={onchange} value={notep.etitle} minLength={5} />
+                    <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="exampleModalLabel">Edit Note</h5>
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <form>
+                                        <div className="mb-3">
+                                            <label htmlFor="etitle" className="form-label">Note Title</label>
+                                            <input type="text" name="etitle" className="form-control" id="etitle" aria-describedby="emailHelp" onChange={onchange} value={notep.etitle} minLength={5} />
+
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="edescription" className="form-label">Note Description</label>
+                                            <textarea className="form-control" id="edescription" rows="3" name="edescription" onChange={onchange} value={notep.edescription} minLength={5}></textarea>
+                                        </div>
+
+                                        <div className="mb-3">
+                                            <label htmlFor="etag" className="form-label">Note Tag</label>
+                                            <input type="text" name="etag" className="form-control" id="etag" aria-describedby="emailHelp" onChange={onchange} value={notep.etag} minLength={3} />
+
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="ecolor" className="form-label">Note Color</label>
+                                            <input type="text" name="ecolor" className="form-control" id="ecolor" onChange={onchange} value={notep.ecolor} minLength={3} aria-describedby="statusColor" />
+                                            <div id="statusColor" className="form-text">This color will differentiate,uregent,pending done notes.</div>
+
+                                        </div>
+
+
+
+
+                                    </form>
 
                                 </div>
-                                <div className="mb-3">
-                                    <label htmlFor="edescription" className="form-label">Note Description</label>
-                                    <textarea className="form-control" id="edescription" rows="3" name="edescription" onChange={onchange} value={notep.edescription} minLength={5}></textarea>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button disabled={notep.etitle.length < 5 || notep.edescription.length < 5 || notep.etag.length < 3} type="button" className="btn btn-primary" onClick={handleclick}>Update Note</button>
                                 </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="etag" className="form-label">Note Tag</label>
-                                    <input type="text" name="etag" className="form-control" id="etag" aria-describedby="emailHelp" onChange={onchange} value={notep.etag} minLength={3} />
-
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="ecolor" className="form-label">Note Color</label>
-                                    <input type="text" name="ecolor" className="form-control" id="ecolor" onChange={onchange} value={notep.ecolor} minLength={3} aria-describedby="statusColor" />
-                                    <div id="statusColor" className="form-text">This color will differentiate,uregent,pending done notes.</div>
-
-                                </div>
-
-
-
-
-                            </form>
-
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button disabled={notep.etitle.length < 5 || notep.edescription.length < 5 || notep.etag.length < 3} type="button" className="btn btn-primary" onClick={handleclick}>Update Note</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="container my-3">
-                <h2>Your Notes</h2>
-                <div className="row ">
-                    {notes.length === 0 && <div class="card">
-                        <div class="card-body">
-                            No notes to display!
+                    <div className="container my-3">
+                        <h2>Your Notes</h2>
+                        <div className="row ">
+
+                            {notes.length === 0 && <div className="card">
+                                <div className="card-body">
+                                    No notes to display!
+                                </div>
+                            </div>}
+
+                            {notes.length !== 0 && notes.map((note) =>
+                                <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
+                            )}
                         </div>
-                    </div>}
-                    {notes.length !== 0 && notes.map((note) =>
-                        <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
-                    )}
-                </div>
-            </div>
-        </>
+                    </div>
+                </>
+            )
+        }} />
     )
 }
 
