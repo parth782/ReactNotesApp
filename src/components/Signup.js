@@ -20,7 +20,7 @@ export const Signup = (props) => {
             body:JSON.stringify({name:details.name,email:details.email,password:details.password})
         })
         const json=await response.json();
-        if(response.status===400||response.status==500){
+        if(response.status===400||response.status===500){
             props.showalert("Some Error Occured","danger")
             return;
         }

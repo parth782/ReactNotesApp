@@ -1,22 +1,7 @@
 import React, { useState } from "react";
 import NoteContext from "./noteContext";
 const NoteState = (props) => {
-    //----------Sample of context-------------
-    // const s1 = {
-    //     "name": "harry",
-    //     "class": "Sb"
-    // }
-    // const [state, setState] = useState(s1)
-    // const update = () => {
-    //     setTimeout(()=>{
-    //         setState({
-    //             "name": "Parth Gupta",
-    //             "class": "Colledge"
-    //         })
-           
-    //     }, 9000)
-    // }
-    //----------------------THE END--------------
+    
     const host=process.env.REACT_APP_BASE_URL;
     const notesInitial=[];
         const [notes,setnotes]=useState(notesInitial);
@@ -37,7 +22,7 @@ const NoteState = (props) => {
           setnotes(json);
           }
         //Add A note
-        const addNote=async (title,description,tag,color)=>{
+        const addNote=async (title,description,tag)=>{
           const response = await fetch(`${host}api/notes/addnote`, {
             method: 'POST', 
             
@@ -47,7 +32,7 @@ const NoteState = (props) => {
               
             },
             
-            body: JSON.stringify({title,description,tag,color}) 
+            body: JSON.stringify({title,description,tag}) 
           });
          
              const json=await response.json()
@@ -70,7 +55,7 @@ const NoteState = (props) => {
               getallNotes();
         }
         //editNote by id
-        const editNote=async (id,title,description,tag,color)=>{
+        const editNote=async (id,title,description,tag)=>{
           //API CALL
           const response = await fetch(`${host}api/notes/updatenote/${id}`, {
             method: 'PUT', 
@@ -81,7 +66,7 @@ const NoteState = (props) => {
               
             },
             
-            body: JSON.stringify({title,description,tag,color}) 
+            body: JSON.stringify({title,description,tag}) 
           });
          
           const json= await response.json()

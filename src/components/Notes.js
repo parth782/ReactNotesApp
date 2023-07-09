@@ -17,14 +17,13 @@ export const Notes = (props) => {
     const context = useContext(noteContext)
     const { notes, getallNotes, editNote } = context
     useEffect(() => {
-
         getallNotes();
     }, [])
     const ref = useRef(null);
-    const [notep, setnote] = useState({ etitle: "", edescription: "", etag: "", eid: "", ecolor: "" })
+    const [notep, setnote] = useState({ etitle: "", edescription: "", etag: "", eid: "" });
     const updatenote = (currentnote) => {
         console.log("update is clicked");
-        setnote({ etag: currentnote.tag, etitle: currentnote.title, edescription: currentnote.description, eid: currentnote._id, ecolor: currentnote.color });
+        setnote({ etag: currentnote.tag, etitle: currentnote.title, edescription: currentnote.description, eid: currentnote._id});
         ref.current.click();
 
 
@@ -37,7 +36,7 @@ export const Notes = (props) => {
     const handleclick = (e) => {
         e.preventDefault();
         ref.current.click();
-        editNote(notep.eid, notep.etitle, notep.edescription, notep.etag, notep.ecolor);
+        editNote(notep.eid, notep.etitle, notep.edescription, notep.etag);
         props.showalert("Note Updated Successfully", "success")
 
 
@@ -82,15 +81,14 @@ export const Notes = (props) => {
 
                                         <div className="mb-3">
                                             <label htmlFor="etag" className="form-label">Note Tag</label>
-                                            <input type="text" name="etag" className="form-control" id="etag" aria-describedby="emailHelp" onChange={onchange} value={notep.etag} minLength={3} />
+                                            <select class="form-select" name='etag' id='etag' onChange={onchange} >
+                                                {notep.etag === "Pending" ? <option value="Pending" selected>Pending</option> : <option value="Pending">Pending</option>}
+                                                {notep.etag === "Completed" ? <option value="Completed" selected>Completed</option> : <option value="Completed">Completed</option>}
+                                               
+                                            </select>
 
                                         </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="ecolor" className="form-label">Note Color</label>
-                                            <input type="text" name="ecolor" className="form-control" id="ecolor" onChange={onchange} value={notep.ecolor} minLength={3} aria-describedby="statusColor" />
-                                            <div id="statusColor" className="form-text">This color will differentiate,uregent,pending done notes.</div>
-
-                                        </div>
+                                       
 
 
 
