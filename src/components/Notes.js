@@ -5,6 +5,8 @@ import { Route, Redirect } from 'react-router-dom';
 import noteContext from '../context/notes/noteContext'
 import { AddNote } from './AddNote'
 import { Noteitem } from './Noteitem'
+import NoteSchema from '../utils/validation/NoteSchema';
+import { useForm } from 'react-hook-form'
 
 export const Notes = (props) => {
     let history = useHistory();
@@ -16,28 +18,30 @@ export const Notes = (props) => {
 
     const context = useContext(noteContext)
     const { notes, getallNotes, editNote } = context
+    const [notep, setnote] = useState({ etitle: "", edescription: "", etag: "", eid: "" });
+    const form = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = form;
+     
     useEffect(() => {
         getallNotes();
+        // eslint-disable-next-line
     }, [])
     const ref = useRef(null);
-    const [notep, setnote] = useState({ etitle: "", edescription: "", etag: "", eid: "" });
+
     const updatenote = (currentnote) => {
-        console.log("update is clicked");
-        setnote({ etag: currentnote.tag, etitle: currentnote.title, edescription: currentnote.description, eid: currentnote._id});
+        setnote({ etag: currentnote.tag, etitle: currentnote.title, edescription: currentnote.description, eid: currentnote._id });
+        form.setValue("title", currentnote.title);
+        form.setValue("description", currentnote.description);
+        form.setValue("tag", currentnote.tag);
         ref.current.click();
-
-
-
     }
-    //const [notep,setnote]=useState({title:"",description:"",tag:""})
-    const onchange = (e) => {
-        setnote({ ...notep, [e.target.name]: e.target.value })
-    }
-    const handleclick = (e) => {
-        e.preventDefault();
+
+    const handleclick = (data) => {
         ref.current.click();
-        editNote(notep.eid, notep.etitle, notep.edescription, notep.etag);
+        editNote(notep.eid, data.title, data.description, data.tag);
         props.showalert("Note Updated Successfully", "success")
+        reset();
+
 
 
     }
@@ -68,37 +72,32 @@ export const Notes = (props) => {
                                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">
-                                    <form>
+                                    <form onSubmit={handleSubmit(handleclick)}>
                                         <div className="mb-3">
-                                            <label htmlFor="etitle" className="form-label">Note Title</label>
-                                            <input type="text" name="etitle" className="form-control" id="etitle" aria-describedby="emailHelp" onChange={onchange} value={notep.etitle} minLength={5} />
+                                            <label htmlFor="title" className="form-label">Note Title</label>
+                                            <input type="text" name="title" className="form-control" id="title"  {...register("title", NoteSchema.title)} />
+                                            {errors.title && <span className="text-danger">{errors.title.message}</span>}
 
                                         </div>
                                         <div className="mb-3">
-                                            <label htmlFor="edescription" className="form-label">Note Description</label>
-                                            <textarea className="form-control" id="edescription" rows="3" name="edescription" onChange={onchange} value={notep.edescription} minLength={5}></textarea>
+                                            <label htmlFor="description" className="form-label">Note Description</label>
+                                            <textarea className="form-control" id="description" rows="3" name="description"  {...register("description", NoteSchema.description)} ></textarea>
+                                            {errors.description && <span className="text-danger">{errors.description.message}</span>}
                                         </div>
 
                                         <div className="mb-3">
-                                            <label htmlFor="etag" className="form-label">Note Tag</label>
-                                            <select class="form-select" name='etag' id='etag' onChange={onchange} >
+                                            <label htmlFor="tag" className="form-label">Note Tag</label>
+                                            <select className="form-select" name='tag' id='tag' {...register("tag", NoteSchema.tag)} >
                                                 {notep.etag === "Pending" ? <option value="Pending" selected>Pending</option> : <option value="Pending">Pending</option>}
                                                 {notep.etag === "Completed" ? <option value="Completed" selected>Completed</option> : <option value="Completed">Completed</option>}
-                                               
+
                                             </select>
+                                            {errors.tag && <span className="text-danger">{errors.tag.message}</span>}
 
                                         </div>
-                                       
-
-
-
-
+                                        <button type="submit" className="btn btn-primary">Update Note</button>
                                     </form>
 
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button disabled={notep.etitle.length < 5 || notep.edescription.length < 5 || notep.etag.length < 3} type="button" className="btn btn-primary" onClick={handleclick}>Update Note</button>
                                 </div>
                             </div>
                         </div>

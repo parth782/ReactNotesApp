@@ -1,51 +1,47 @@
 
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import noteContext from '../context/notes/noteContext'
+import NoteSchema from '../utils/validation/NoteSchema'
+import { useForm } from 'react-hook-form'
 
 export const AddNote = (props) => {
     const context = useContext(noteContext)
+    const { register, handleSubmit, formState: { errors },reset } = useForm();
+
     // eslint-disable-next-line
     const { addNote } = context
-    const [notep, setnote] = useState({ title: "", description: "", tag: "" })
-    const handleclick = (e) => {
-        e.preventDefault();
-        addNote(notep.title, notep.description, notep.tag);
-        setnote({ title: "", description: "", tag: "", color: "" });
-        props.showalert("Note Added Successfully", "success")
-
-
+    const handleclick = (data) => {
+        addNote(data.title, data.description, data.tag);
+        props.showalert("Note Added Successfully", "success");
+        reset();
     }
-    const onchange = (e) => {
-        setnote({ ...notep, [e.target.name]: e.target.value })
-    }
+
 
     return (
         <div>
-            <h1 className="my-5">Add a Note</h1>
-            <form>
+            <h1 className="my-5">Add a Note (To See the notes added Scroll Down)</h1>
+            <form onSubmit={handleSubmit(handleclick)}>
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Note Title</label>
-                    <input type="text" name="title" className="form-control" id="title" onChange={onchange} minLength={5} value={notep.title} />
-
+                    <input type="text" name="title" className="form-control" id="title" {...register("title", NoteSchema.title)} />
+                    {errors.title && <span className="text-danger">{errors.title.message}</span>}
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="notedescription" className="form-label">Note Description</label>
-                    <textarea className="form-control" id="description" rows="3" name="description" onChange={onchange} minLength={5} value={notep.description}></textarea>
+                    <label htmlFor="description" className="form-label">Note Description</label>
+                    <textarea className="form-control" id="description" rows="3" name="description" {...register("description", NoteSchema.description)}></textarea>
+                    {errors.description && <span className="text-danger">{errors.description.message}</span>}
                 </div>
                 <div className="mb-3">
                     <label htmlFor="tag" className="form-label">Note Status</label>
-                    <select class="form-select" name='tag' id='tag' onChange={onchange} >
+                    <select className="form-select" name='tag' id='tag'  {...register("tag", NoteSchema.tag)} >
                         <option value="" selected>Select Status</option>
                         <option value="Pending">Pending</option>
                         <option value="Completed">Completed</option>
                     </select>
+                    {errors.tag && <span className="text-danger">{errors.tag.message}</span>}
 
                 </div>
-               
-
-
-
-                <button disabled={notep.title.length < 5 || notep.description.length < 5 || notep.tag.length < 3} type="submit" className="btn btn-primary my-2" onClick={handleclick}>Add Note</button>
+                <button type="submit" className="btn btn-primary my-2">Add Note</button>
             </form>
 
         </div>

@@ -14,7 +14,7 @@ export const Noteitem = (props) => {
     return (
 
 
-        <div className="card mx-5 my-3" style={{ "width": "18rem", "backgroundColor": note.tag !== "Pending" ? "green" : "red", "color": note.tag !== "" ? "white" : "black" }}>
+        <div className="card mx-4 my-3" style={{ "width": "18rem", "backgroundColor": note.tag !== "Pending" ? "green" : "red", "color": note.tag !== "" ? "white" : "black" }}>
 
             <div className="card-body">
                 <div className="d-flex align-items-center">
