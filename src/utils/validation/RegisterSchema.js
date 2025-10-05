@@ -16,43 +16,43 @@ const RegisterSchema = {
         },
         minLength: {
             value: 8,
-            message: "Password must be at least 6 characters"
+            message: "Password must be at least 8 characters"
         },
-        pattern:{
-            value:/(?:^\s+|\s+$)/,
-            message:"Password must not contain any spaces"
-        },
+        // no whitespace anywhere
+        pattern: {
+            value: /^[^\s].*[^\s]$/,
+            message: "Password must not contain spaces"
+        }
     },
     cpassword: {
-        required:{
-            value:true,
-            message:"Confirm Password is required"
+        required: {
+            value: true,
+            message: "Confirm Password is required"
         },
         minLength: {
             value: 8,
-            message: "Password must be at least 6 characters"
+            message: "Confirm Password must be at least 8 characters"
         },
-        pattern:{
+        // no whitespace anywhere
+        pattern: {
             value: /^[^\s].*[^\s]$/,
-            message:"Confirm Password must not contain any spaces"
+            message: "Confirm Password must not contain spaces"
         }
-
     },
-    name:{
-        required:{
-            value:true,
-            message:"Name is required"
+    name: {
+        required: {
+            value: true,
+            message: "Name is required"
         },
-        pattern:{
-            value:/^[^\s].*[^\s]$/,
-            message:"Name must not contain any spaces"
+       // leading/trailing use /^[^\s].*[^\s]$/
+        pattern: {
+            value: /^[^\s].*[^\s]$/,
+            message: "Name must not contain spaces"
         },
         minLength: {
-            value: 5,
+            value: 3,
             message: "Name must be at least 3 characters"
-        },
-        
+        }
     }
-
 }
 export default RegisterSchema;

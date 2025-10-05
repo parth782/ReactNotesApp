@@ -106,13 +106,13 @@ export const Notes = (props) => {
                         <h2>Your Notes</h2>
                         <div className="row ">
 
-                            {notes.length === 0 && <div className="card">
+                            {(!Array.isArray(notes) || notes.length === 0) && <div className="card">
                                 <div className="card-body">
                                     No notes to display!
                                 </div>
                             </div>}
 
-                            {notes.length !== 0 && notes.map((note) =>
+                            {Array.isArray(notes) && notes.length !== 0 && notes.map((note) =>
                                 <Noteitem key={note._id} note={note} updatenote={updatenote} showalert={showalert} />
                             )}
                         </div>

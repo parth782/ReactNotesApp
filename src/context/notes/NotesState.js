@@ -33,6 +33,7 @@ const NoteState = (props) => {
       localStorage.removeItem('token');
       return;
     }
+    console.log(json);
     setnotes(json);
   }
 
